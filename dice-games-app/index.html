@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Dice Den — Yahtzee, Farkle & More</title>
+  <meta name="description" content="Play classic dice games: Yahtzee, Farkle and more. Challenge the computer or a friend on your phone.">
+  <meta name="theme-color" content="#7c5cfc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dice Den">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Home Screen -->
+    <section id="home-screen" class="screen active">
+      <div class="hero">
+        <div class="logo">
+          <span class="dice-icon">🎲</span>
+          <h1>Dice Den</h1>
+        </div>
+        <p class="tagline">Classic dice games. Play solo or with a friend.</p>
+      </div>
+
+      <div class="game-grid">
+        <button class="game-card" data-game="yahtzee">
+          <div class="game-icon">🎯</div>
+          <h2>Yahtzee</h2>
+          <p>Score combinations across 13 categories. Strategy + luck.</p>
+          <span class="badge">5 Dice</span>
+        </button>
+        <button class="game-card" data-game="farkle">
+          <div class="game-icon">🔥</div>
+          <h2>Farkle</h2>
+          <p>Risk it for the points. Bank or bust on every roll.</p>
+          <span class="badge">6 Dice</span>
+        </button>
+        <button class="game-card coming-soon" disabled>
+          <div class="game-icon">🐷</div>
+          <h2>Pig</h2>
+          <p>Simple push-your-luck classic. Coming soon.</p>
+          <span class="badge soon">Soon</span>
+        </button>
+        <button class="game-card coming-soon" disabled>
+          <div class="game-icon">🤥</div>
+          <h2>Liar's Dice</h2>
+          <p>Bluff your way to victory. Coming soon.</p>
+          <span class="badge soon">Soon</span>
+        </button>
+      </div>
+
+      <footer class="home-footer">
+        <p>Made for fun · Local multiplayer & AI opponents</p>
+        <p class="install-hint" id="install-hint" style="display:none; margin-top:0.75rem; color:#a78bfa; font-size:0.85rem;">
+          Tip: Install this app to your home screen for the best experience!
+        </p>
+      </footer>
+    </section>
+
+    <!-- Mode Select Screen -->
+    <section id="mode-screen" class="screen">
+      <button class="back-btn" id="mode-back">← Back</button>
+      <div class="mode-content">
+        <h2 id="mode-title">Choose Mode</h2>
+        <div class="mode-cards">
+          <button class="mode-card" data-mode="solo">
+            <div class="mode-icon">🤖</div>
+            <h3>vs Computer</h3>
+            <p>Challenge a smart AI opponent</p>
+          </button>
+          <button class="mode-card" data-mode="local">
+            <div class="mode-icon">👥</div>
+            <h3>vs Friend</h3>
+            <p>Hot-seat multiplayer on one device</p>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Yahtzee Game Screen -->
+    <section id="yahtzee-screen" class="screen">
+      <header class="game-header">
+        <button class="back-btn" id="yahtzee-back">← Menu</button>
+        <h2>Yahtzee</h2>
+        <div class="round-info">Round <span id="yahtzee-round">1</span>/13</div>
+      </header>
+
+      <div class="players-bar" id="yahtzee-players"></div>
+
+      <div class="dice-area">
+        <div class="dice-row" id="yahtzee-dice"></div>
+        <div class="dice-controls">
+          <button id="yahtzee-roll" class="primary-btn">Roll Dice</button>
+          <div class="rolls-left">Rolls left: <span id="yahtzee-rolls-left">3</span></div>
+        </div>
+      </div>
+
+      <div class="scorecard-container">
+        <div class="scorecard" id="yahtzee-scorecard"></div>
+      </div>
+
+      <div class="turn-message" id="yahtzee-message"></div>
+    </section>
+
+    <!-- Farkle Game Screen -->
+    <section id="farkle-screen" class="screen">
+      <header class="game-header">
+        <button class="back-btn" id="farkle-back">← Menu</button>
+        <h2>Farkle</h2>
+        <div class="target-info">Target: <span id="farkle-target">10000</span></div>
+      </header>
+
+      <div class="players-bar" id="farkle-players"></div>
+
+      <div class="farkle-score-display">
+        <div class="turn-score">
+          <span class="label">This Turn</span>
+          <span class="value" id="farkle-turn-score">0</span>
+        </div>
+        <div class="banked-score">
+          <span class="label">Banked</span>
+          <span class="value" id="farkle-banked">0</span>
+        </div>
+      </div>
+
+      <div class="dice-area">
+        <div class="dice-row" id="farkle-dice"></div>
+        <div class="dice-controls farkle-controls">
+          <button id="farkle-roll" class="primary-btn">Roll</button>
+          <button id="farkle-bank" class="secondary-btn" disabled>Bank Points</button>
+        </div>
+      </div>
+
+      <div class="scoring-help" id="farkle-help">
+        <details>
+          <summary>Scoring Rules</summary>
+          <ul>
+            <li>Single 1 = 100 · Single 5 = 50</li>
+            <li>Three 1s = 1000 · Three of a kind = face × 100</li>
+            <li>Four of a kind = 2× three · Five = 3× · Six = 4×</li>
+            <li>Straight (1-6) = 1500 · Three pairs = 1500</li>
+            <li>Full house (3+2) = 1500 · Two triplets = 2500</li>
+            <li>Must score at least one die each roll or Farkle!</li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="turn-message" id="farkle-message"></div>
+    </section>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 id="winner-title">Game Over!</h2>
+        <p id="winner-text"></p>
+        <div class="final-scores" id="final-scores"></div>
+        <div class="modal-actions">
+          <button id="play-again" class="primary-btn">Play Again</button>
+          <button id="back-to-menu" class="secondary-btn">Main Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dice.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/yahtzee.js"></script>
+  <script src="js/farkle.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Register service worker for offline / installable app
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Dice Den ready for install', reg.scope))
+          .catch(err => console.log('SW registration failed', err));
+      });
+    }
+
+    // Optional: show install tip
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const hint = document.getElementById('install-hint');
+      if (hint) hint.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
